@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
 
+# Ignore SNES stuff
+*.smc
+*.sym
+
 # Object files
 *.o
 *.ko
