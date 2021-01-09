@@ -8,5 +8,5 @@ compile:
 	wla-65816 -v -I ./inc -o ./obj/main.obj main.asm
 
 clean:
-	rm *.smc
-	rm -r ./obj
+	rm -f *.smc
+	rm -rf ./obj

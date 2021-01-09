@@ -3,38 +3,40 @@
 
 [labels]
 00:0000 EmptyHandler
-00:8511 Init
+00:8514 Init
 00:0000 color_count
 00:8001 Start
-00:802b Blub2
+00:802b _start_blub
 00:8046 loop_tile
 00:8063 loop_palette
 00:806e _load_map_tiledate_into_vram
-00:80b9 _main_game_loop
-00:80c2 VBlank
-00:80d6 DMAPalette
-00:80f1 palette
-00:8111 tiles
+00:80bc MainGameLoop
+00:80bc _mainGameLoop_begin
+00:80c5 VBlank
+00:80d9 DMAPalette
+00:80f4 palette
+00:8114 tiles
 
 [definitions]
 00000001 _sizeof_EmptyHandler
 00000102 _sizeof_Init
 00000001 _sizeof_color_count
 0000002a _sizeof_Start
-0000001b _sizeof_Blub2
+0000001b _sizeof__start_blub
 0000001d _sizeof_loop_tile
 0000000b _sizeof_loop_palette
-0000004b _sizeof__load_map_tiledate_into_vram
-00000009 _sizeof__main_game_loop
+0000004e _sizeof__load_map_tiledate_into_vram
+00000000 _sizeof_MainGameLoop
+00000009 _sizeof__mainGameLoop_begin
 00000014 _sizeof_VBlank
 0000001b _sizeof_DMAPalette
 00000020 _sizeof_palette
 00000400 _sizeof_tiles
 
 [source files]
-0001 160e12ee main.asm 
-0002 5736796f ./inc/Header.inc 
-0003 4c040037 ./inc/snes_register.inc 
+0001 ffffffff81ddc8e7 main.asm 
+0002 5736796f ./inc/header.inc 
+0003 4c040037 ./inc/snes.inc 
 0004 ffffffffe469a30d ./inc/snes_ppu_control.inc 
 0005 00d3d175 ./inc/snes_ppu_bg_control.inc 
 0006 76ba7a5b ./inc/snes_vram_bg_tile_access.inc 
@@ -43,4 +45,4 @@
 0009 3443cc9e ./inc/data.inc 
 
 [rom checksum]
-ffffffff5d1eaeac
+ffffffff134d70b7
