@@ -42,7 +42,7 @@
 0006 76ba7a5b ./inc/snes_vram_bg_tile_access.inc 
 0007 69e3ec66 ./inc/snes_controller_io.inc 
 0008 ffffffffb5eb89ed snes_Init.asm 
-0009 3443cc9e ./inc/data.inc 
+0009 ffffffff89c9ef00 ./inc/data.inc 
 
 [rom checksum]
 ffffffff134d70b7
