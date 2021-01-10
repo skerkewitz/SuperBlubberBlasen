@@ -30,6 +30,7 @@ clean:
 	rm -f *.smc
 	rm -rf ./obj
 	rm -rf ./lib
+	rm -rf ./data
 
 round01:
 	superfamiconv -v -W 8 -H 8 --color-zero 00000000 -i ./res/level/round01.png -p ./data/round01_palette.dat -D -F -t ./data/round01_tile.dat -B 4
