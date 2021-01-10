@@ -92,25 +92,8 @@ loop_palette:
 	dey	
 	bne 	loop_palette
 
-_load_map_tiledate_into_vram:
-
 	_useIndex16_
-
-	lda  	#<2048					; setup VRAM target
-	sta		VMADDL
-	lda  	#>2048
-	sta		VMADDH
-
-	ldy		#size_of_tilemap		; setup counter
-	ldx		#0
-
-_load_map_tiledate_into_vram_loop:
-	lda.l	tilemap, x				; load tilemap data
-	sta		VMDATAL
-	stz		VMDATAH
-	inx
-	dey	
-	bne 	_load_map_tiledate_into_vram_loop
+	jsr		LoadTilemapDataIntoVram
 
 	lda     #%00001111  ; End VBlank, setting brightness to 15 (100%).
 	sta     $2100
@@ -153,6 +136,52 @@ VBlank:
 	plp
 	rti
 
+
+;======================================================================================================================
+; Load the tilemap map data into VRAM.
+;----------------------------------------------------------------------------
+; In: None
+;----------------------------------------------------------------------------
+; Out: None
+;----------------------------------------------------------------------------
+; Modifies: A, X, Y
+; Requires: mem/A = 8 bit, X/Y = 16 bit
+; Requires: VBlank active
+;----------------------------------------------------------------------------
+LoadTilemapDataIntoVram:
+
+	;
+	; Setup VRAM target
+	lda  	#<2048
+	sta		VMADDL
+	lda  	#>2048
+	sta		VMADDH
+	
+	;
+	; Fill first to rows with empty tile
+	ldy		#64						; first to rows of tiles are empty
+	lda		#16						; index of the empty file
+
+_load_tilemap_date_into_vram__header_loop:
+	sta		VMDATAL
+	stz		VMDATAH
+	dey	
+	bne 	_load_tilemap_date_into_vram__header_loop
+
+	;
+	; fill remaining rows with actual map data
+	ldy		#size_of_tilemap		; setup counter
+	ldx		#0
+
+_load_tilemap_date_into_vram__mapdata_loop:
+	lda.l	tilemap, x				; load tilemap data
+	sta		VMDATAL
+	stz		VMDATAH
+	inx
+	dey	
+	bne 	_load_tilemap_date_into_vram__mapdata_loop
+
+	rts
 
 
 
