@@ -15,7 +15,7 @@ SF-NODISCARD = --no-discard --no-flip
 #
 # Rules
 
-build: lib obj
+build: data lib obj
 	wlalink $(LINKER-FLAGS) -i sblubber.link $(ROM-NAME)
 
 obj:
@@ -32,8 +32,12 @@ clean:
 	rm -rf ./lib
 	rm -rf ./data
 
+data: round01 bubblun
+
 round01:
+	mkdir -p data
 	superfamiconv -v -W 8 -H 8 --color-zero 00000000 -i ./res/level/round01.png -p ./data/round01_palette.dat -D -F -t ./data/round01_tile.dat -B 4
 
 bubblun:
+	mkdir -p data
 	superfamiconv --verbose --sprite-mode $(SF-TILE16x16) $(SF-NODISCARD) --bpp 4 --color-zero FF00FF -i ./res/sprite/bubblun.png -p ./data/bubblun_palette.dat --out-tiles ./data/bubblun_tile.dat 
