@@ -11,6 +11,18 @@
 .bank 0 slot 1
 .section "MainCode" FORCE 
  
+.macro _useIndex16_					; Turn on 16bit mode on X and Y, also let wla knwo using .index16
+	.index 	16
+	rep		#$10					; turn X flag in SR off
+.endm
+
+.macro _useIndex8_					; Turn on 8bit mode on X and Y, also let wla knwo using .index8
+	.index	8
+	sep		#$10					; turn X flag in SR on
+.endm
+
+
+
 Start:
 	; Initialize the SNES.
 	Snes_Init
@@ -49,8 +61,7 @@ _start_blub:
 	stz     $2116       ; set CGRAM addr to zero
 	stz	    $2117
 
-.index 16	
-	rep		#$10
+	_useIndex16_
 	ldy		#size_of_tiles
 	ldx		#0
 
@@ -65,9 +76,8 @@ loop_tile:
 	dey	
 
 	bne 	loop_tile
-;.index 8
-	sep		#$30
-	.index 8
+
+	_useIndex8_
 
 ;.index 8
 	; Upload tileset
@@ -83,36 +93,24 @@ loop_palette:
 	bne 	loop_palette
 
 _load_map_tiledate_into_vram:
-	lda  	#<2048
+
+	_useIndex16_
+
+	lda  	#<2048					; setup VRAM target
 	sta		VMADDL
 	lda  	#>2048
 	sta		VMADDH
-	stz		VMDATAL
-	stz		VMDATAH
-	lda  	#<2049
-	sta		VMADDL
-	lda  	#>2049
-	sta		VMADDH
-	lda		#1
+
+	ldy		#size_of_tilemap		; setup counter
+	ldx		#0
+
+_load_map_tiledate_into_vram_loop:
+	lda.l	tilemap, x				; load tilemap data
 	sta		VMDATAL
 	stz		VMDATAH
-
-	lda  	#<(2048 + 32)
-	sta		VMADDL
-	lda  	#>(2048 + 32)
-	sta		VMADDH
-	lda		#(0+16)
-	sta		VMDATAL
-	stz		VMDATAH
-
-	lda  	#<(2048 + 1 + 32)
-	sta		VMADDL
-	lda  	#>(2048 + 1 + 32)
-	sta		VMADDH
-	lda		#(1+16)
-	sta		VMDATAL
-	stz		VMDATAH
-
+	inx
+	dey	
+	bne 	_load_map_tiledate_into_vram_loop
 
 	lda     #%00001111  ; End VBlank, setting brightness to 15 (100%).
 	sta     $2100
