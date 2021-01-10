@@ -3,6 +3,9 @@
 .include "snes.inc"
 .include "snes_Init.asm"
 
+; Include all the static date
+.include "data.inc"
+
 ; Declare global zero pages var
 .RAMSECTION "ZeroPageVars" BANK 0 SLOT 0
 	color_count:	db
@@ -36,8 +39,9 @@ Start:
 	
 	lda     #%10000000  ; Force VBlank by turning off the screen.
 	sta     $2100
-     
-	stz     CGADD       ; set CGRAM addr to zero
+
+set_palette_red:
+	_snes_cg_address_i_ 0 
 
           ; gggrrrrr
 	lda     #%00011111  ; Load the low byte of the green color.
@@ -77,20 +81,13 @@ loop_tile:
 
 	bne 	loop_tile
 
-	_useIndex8_
+	;
+	; Load tiles patte into color palette 0
+	_useIndex16_
+	_snes_cg_address_0_												; set CGRAM addr to zero
+	_snes_load_palette_into_vram_a8i16vb_ palette size_of_palette	; load via DMA channel 0
+	_snes_load_palette_into_vram_a8i16vb_ spr_bubblun_pal size_of_bubblun_palette	; load via DMA channel 0
 
-;.index 8
-	; Upload tileset
-	stz     CGADD       ; set CGRAM addr to zero
-	ldy		#size_of_palette
-	ldx		#0
-
-loop_palette:
-	lda.l	palette, x
-	sta		CGDATA
-	inx
-	dey	
-	bne 	loop_palette
 
 	_useIndex16_
 	jsr		LoadTilemapDataIntoVram
@@ -183,59 +180,5 @@ _load_tilemap_date_into_vram__mapdata_loop:
 
 	rts
 
-
-
-;============================================================================
-;LoadPalette - Macro that loads palette information into CGRAM
-;----------------------------------------------------------------------------
-; In: SRC_ADDR -- 24 bit address of source data,
-;     START -- Color # to start on,
-;     SIZE -- # of COLORS to copy
-;----------------------------------------------------------------------------
-; Out: None
-;----------------------------------------------------------------------------
-; Modifies: A,X
-; Requires: mem/A = 8 bit, X/Y = 16 bit
-;----------------------------------------------------------------------------
-.MACRO LoadPalette
-    lda #\2
-    sta $2121       ; Start at START color
-    lda #:\1        ; Using : before the parameter gets its bank.
-    ldx #\1         ; Not using : gets the offset address.
-    ldy #(\3 * 2)   ; 2 bytes for every color
-    jsr DMAPalette
-.ENDM
-
-
-;============================================================================
-; DMAPalette -- Load entire palette using DMA
-;----------------------------------------------------------------------------
-; In: A:X  -- points to the data
-;      Y   -- Size of data
-;----------------------------------------------------------------------------
-; Out: None
-;----------------------------------------------------------------------------
-; Modifies: none
-;----------------------------------------------------------------------------
-DMAPalette:
-    phb
-    php         ; Preserve Registers
-
-    stx $4302   ; Store data offset into DMA source offset
-    sta $4304   ; Store data bank into DMA source bank
-    sty $4305   ; Store size of data block
-
-    stz $4300   ; Set DMA Mode (byte, normal increment)
-    lda #$22    ; Set destination register ($2122 - CGRAM Write)
-    sta $4301
-    lda #$01    ; Initiate DMA transfer
-    sta $420B
-
-    plp
-    plb
-    rts         ; return from subroutine
-
 .ends
 
-; Include all the static date
-.include "data.inc"

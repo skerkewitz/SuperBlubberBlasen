@@ -1,2 +1,5 @@
 [objects]
 obj/main.obj
+
+[libraries]
+bank 0 slot 1 lib/snes_dma.lib

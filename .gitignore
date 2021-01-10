@@ -7,11 +7,15 @@
 
 zTrash
 
+# Binary data files
+data/
+
 # Object files
 *.o
 *.ko
 *.obj
 *.elf
+obj/
 
 # Linker output
 *.ilk
@@ -27,6 +31,7 @@ zTrash
 *.a
 *.la
 *.lo
+lib/
 
 # Shared objects (inc. Windows DLLs)
 *.dll
