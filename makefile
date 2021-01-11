@@ -2,14 +2,21 @@
 # Vars
 
 ASM = ../wla-dx/build/binaries/wla-65816
-ASM_INC = -I ./inc
-
 LINKER = ../wla-dx/build/binaries/wlalink
 
+SRC-DIR = ./src
+INC-DIR = $(SRC-DIR)/inc
+
+OUT-DIR = ./out
+OBJ-OUT-DIR = $(OUT-DIR)/obj
+LIB-OUT-DIR = $(OUT-DIR)/lib
+
+ASM-INC = -I $(INC-DIR)
 LINKER-FLAGS = -S -A -v
 
 OUT-NAME = sblubber
 ROM-NAME = $(OUT-NAME).smc
+
 
 SF-TILE16x16 = --tile-width 16 --tile-height 16
 SF-NODISCARD = --no-discard --no-flip 
@@ -17,17 +24,21 @@ SF-NODISCARD = --no-discard --no-flip
 # Rules
 
 build: data lib obj
-	$(LINKER) $(LINKER-FLAGS) -i sblubber.link $(ROM-NAME)
+	mkdir -p $(OUT-DIR)
+	$(LINKER) $(LINKER-FLAGS) -i sblubber.link $(OUT-DIR)/$(ROM-NAME)
 
 obj:
-	mkdir ./obj
-	$(ASM) -v $(ASM_INC) -i -o obj/main.obj main.asm
+	mkdir -p $(OBJ-OUT-DIR)
+	$(ASM) -v $(ASM-INC) -i -o $(OBJ-OUT-DIR)/main.obj $(SRC-DIR)/main.asm
 
 lib:
-	mkdir ./lib
-	$(ASM) -v $(ASM_INC) -i -l lib/snes_dma.lib snes_dma.asm
+	mkdir -p $(LIB-OUT-DIR)
+	$(ASM) -v $(ASM-INC) -i -l $(LIB-OUT-DIR)/snes_init.lib $(SRC-DIR)/snes_init.asm
+	$(ASM) -v $(ASM-INC) -i -l $(LIB-OUT-DIR)/snes_dma.lib $(SRC-DIR)/snes_dma.asm
 
 clean:
+	rm -rf $(OUT-DIR)
+	rm -f *.sym
 	rm -f *.smc
 	rm -rf ./obj
 	rm -rf ./lib

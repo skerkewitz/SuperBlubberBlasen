@@ -1,18 +1,4 @@
-.MACRO Snes_Init
- 	sei 	 	; Disabled interrupts
- 	
-	; switch to native mode
- 	clc 	 	; clear carry to switch to native mode
- 	xce 	 	; Xchange carry & emulation bit. native mode
 
- 	rep 	#$18 	; Binary mode (decimal mode off), X/Y 16 bit
-	ldx 	#$1FFF  ; set stack to $1FFF
-	txs
- 
-	jsr Init
- .ENDM
-
- 
  .bank 0
  .section "Snes_Init" SEMIFREE
  Init:

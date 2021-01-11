@@ -10,4 +10,20 @@
 .include "snes_dma.inc"                   ; SNES CGRAM access
 
 
-;.include "snes_dma.asm"                   ; SNES CGRAM access
+;
+; Use this macro to initialize the SNES
+.MACRO Snes_Init
+ 	sei 	 	    ; Disabled interrupts
+ 	
+	; switch to native mode
+ 	clc 	 	    ; clear carry to switch to native mode
+ 	xce 	 	    ; Xchange carry & emulation bit. native mode
+
+ 	rep 	#$18 	; Binary mode (decimal mode off), X/Y 16 bit
+	ldx 	#$1FFF  ; set stack to $1FFF
+	txs
+ 
+	jsr Init
+ .ENDM
+
+ 
