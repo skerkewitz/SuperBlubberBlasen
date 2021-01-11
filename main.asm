@@ -9,19 +9,34 @@
 ; Declare global zero pages var
 .RAMSECTION "ZeroPageVars" BANK 0 SLOT 0
 	color_count:	db
+
+	;
+	; Player sprite position in screen space
+	player_x:		db
+	player_y:		db
 .ENDS
 
 .bank 0 slot 1
 .section "MainCode" FORCE 
  
-.macro _useIndex16_					; Turn on 16bit mode on X and Y, also let wla knwo using .index16
+.macro _useIndex16_					; Turn on 16bit mode on for X and Y, also let wla know using .index16
 	.index 	16
 	rep		#$10					; turn X flag in SR off
 .endm
 
-.macro _useIndex8_					; Turn on 8bit mode on X and Y, also let wla knwo using .index8
+.macro _useIndex8_					; Turn on 8bit mode on for X and Y, also let wla know using .index8
 	.index	8
 	sep		#$10					; turn X flag in SR on
+.endm
+
+.macro _useAccu16_					; Turn on 16bit mode on for A, also let wla know using .accu16
+	.index 	16
+	rep		#$20					; turn M flag in SR off
+.endm
+
+.macro _useAccu8_					; Turn on 8bit mode on for A, also let wla know using .accu8
+	.index	8
+	sep		#$20					; turn M flag in SR on
 .endm
 
 
@@ -52,6 +67,7 @@ set_palette_red:
 	lda     #%00000000  ; Load the high byte of the green color.
 	sta     CGDATA
 
+/*
 _start_blub:
 	lda		#$FF
 	pha
@@ -61,6 +77,14 @@ _start_blub:
 	sta     1,s
 	lda		#$00
 	pla		
+	*/
+
+	;
+	; Init player sprite vars
+_init_player_sprite_vars:
+	stz		player_x
+	lda		#100
+	sta		player_y	
 
 	; 
 	; Load tileset data into vram
@@ -96,9 +120,48 @@ _start_blub:
 ; The top main game loop, does not much at the moment
 MainGameLoop:
 _mainGameLoop_begin:
-	lda		JOY1H
-	lda		JOY1L
 
+;
+;	lda		JOY1L
+	lda		JOY1H					; load full 16bit joypad 1 state into X
+	
+	tax								; Check button R
+	and 	#1						
+	beq		_joy1_skip_dpad_r
+
+	inc		player_x
+
+_joy1_skip_dpad_r:
+	txa
+	lsr		
+	tax
+	and		#1
+	beq		_joy1_skip_dpad_l
+
+	dec		player_x
+
+
+_joy1_skip_dpad_l:
+	txa
+	lsr		
+	tax
+	and		#1
+	beq		_joy1_skip_dpad_d
+
+	inc		player_y
+
+_joy1_skip_dpad_d:
+	txa
+	lsr		
+	tax
+	and		#1
+	beq		_joy1_skip_dpad_u
+
+	dec		player_y
+
+_joy1_skip_dpad_u:
+
+	wai								; Wait for vblank
 	jmp		_mainGameLoop_begin
 
 
@@ -137,10 +200,13 @@ _clear_sprites_loop:
 	stz		$2102					; reset target addr in OAM
 	stz		$2103
 
-	lda		#100					; sprite x
+	;lda		#100					; sprite x
+	lda		player_x
 	sta		$2104					;
-	lda 	#110					; sprite y
+	;lda 	#110					; sprite y
+	lda		player_y
 	sta		$2104
+
 	lda		#18						; tile number
 	sta		$2104
 	
