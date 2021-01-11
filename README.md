@@ -11,3 +11,4 @@ Use ```make clean; make``` to build the rom.
 # SNES Documentation
 
 * [Full SNES documentation](https://problemkaputt.de/fullsnes.htm) with all the registers
+* [65816 instruction set overview](https://undisbeliever.net/snesdev/65816-opcodes.htm)
