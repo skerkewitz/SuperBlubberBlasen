@@ -9,7 +9,7 @@
 	.endif
 .endm
 
-
+.bank 0 slot 1
 .section "StaticFileData"
 	;palette:	.INCBIN "data/palette.dat"	FSIZE size_of_palette
 	;tiles:		.INCBIN "data/tile.dat"		FSIZE size_of_tiles

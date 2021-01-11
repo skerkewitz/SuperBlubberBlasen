@@ -5,6 +5,8 @@
 ; Include all the static date
 .include "data.inc"
 
+.include "src/game_inc/game_map_const.inc"
+
 ; Declare global zero pages var
 .RAMSECTION "ZeroPageVars" BANK 0 SLOT 0
 	color_count:	db			; blah
@@ -45,38 +47,11 @@ Start:
 	Snes_Init
  
 	; Set the background color to green.
-	sep		#$20        ; Set the A register to 8-bit.
-	
-	
+	_useAccu8_						; Set the A register to 8-bit.
 	_sns_controller_io__enable_automatic_joypad_read
-	
 	
 	lda     #%10000000  ; Force VBlank by turning off the screen.
 	sta     $2100
-
-@set_palette_red:
-	_useIndex16_
-	_snes_cg_address_i_ 0 
-
-          ; gggrrrrr
-	lda     #%00011111  ; Load the low byte of the green color.
-	sta     CGDATA
-     
-  ;         0bbbbbgg
-	lda     #%00000000  ; Load the high byte of the green color.
-	sta     CGDATA
-
-/*
-_start_blub:
-	lda		#$FF
-	pha
-	lda		#$00
-	lda     1,s
-	dea
-	sta     1,s
-	lda		#$00
-	pla		
-	*/
 
 	;
 	; Init player sprite vars
@@ -95,13 +70,11 @@ _start_blub:
 
 	;
 	; Load color palettes into cgram
-	_useIndex16_
 	_snes_cg_address_0_												; set CGRAM addr to zero
 	_snes_load_palette_into_vram_a8i16vb_ palette size_of_palette	; load via DMA channel 0
 	_snes_cg_address_i_	144										; set CGRAM addr to zero
 	;_snes_cg_address_0_												; set CGRAM addr to zero
 	_snes_load_palette_into_vram_a8i16vb_ spr_bubblun_pal size_of_bubblun_palette	; load via DMA channel 0
-
 
 	;
 	; Load tilemap data into vram
@@ -119,7 +92,7 @@ _start_blub:
 ; The top main game loop, does not much at the moment
 MainGameLoop:
 @begin:
-
+	_useIndex16_
 ;
 ;	lda		JOY1L
 	lda		JOY1H					; load full 16bit joypad 1 state into X
@@ -160,6 +133,14 @@ MainGameLoop:
 
 @joy1_skip_dpad_u:
 
+
+	lda		player_x
+	tax
+	lda		player_y
+	tay
+	game_map_content_at_screen_pos
+	lda.w	tilemap, x	
+
 	wai								; Wait for vblank
 	jmp		@begin
 
@@ -170,7 +151,6 @@ MainGameLoop:
 VBlank:
 	php
 	pha
-
 
 	;
 	; Clear OAM
@@ -227,7 +207,7 @@ VBlank:
   ;         0bbbbbgg
 ;	lda     #%00000000  ; Load the high byte of the green color.
 	stz     $2122 */
-
+ @end:
 	pla
 	plp
 	rti

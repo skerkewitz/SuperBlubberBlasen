@@ -25,7 +25,7 @@ SF-NODISCARD = --no-discard --no-flip
 
 build: data lib obj
 	mkdir -p $(OUT-DIR)
-	$(LINKER) $(LINKER-FLAGS) -i sblubber.link $(OUT-DIR)/$(ROM-NAME)
+	$(LINKER) $(LINKER-FLAGS) -i sblubber.link $(ROM-NAME)
 
 obj:
 	mkdir -p $(OBJ-OUT-DIR)
