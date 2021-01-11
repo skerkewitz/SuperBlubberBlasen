@@ -40,4 +40,4 @@ round01:
 
 bubblun:
 	mkdir -p data
-	superfamiconv --verbose --sprite-mode $(SF-TILE16x16) $(SF-NODISCARD) --bpp 4 --color-zero FF00FF -i ./res/sprite/bubblun.png -p ./data/bubblun_palette.dat --out-tiles ./data/bubblun_tile.dat 
+	superfamiconv --verbose --no-remap --color-zero FF00FF --sprite-mode $(SF-TILE16x16) $(SF-NODISCARD) --bpp 4  -i ./res/sprite/bubblun.png -p ./data/bubblun_palette.dat --out-tiles ./data/bubblun_tile.dat 

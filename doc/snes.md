@@ -95,7 +95,9 @@ This memory is used to defines sprites. Sprites are also called objects on the S
 * Sprites can only access palette 0-7.
 
 ### OAM (Object Attribute Memory) layout
-The OAM size is 512+32 bytesc and contains data for 128 OBJs. The first part (512 bytes) contains 128 4-byte entries for each OBJ:
+The OAM size is 512+32 bytesc (544 bytes in total) and contains data for 128 OBJs. Keep in mind that 544 in hex is $220h and 512 is $200h. This will be important when it comes to writing to OAM.
+
+The first part (512 bytes) contains 128 4-byte entries for each OBJ:
 
 | Byte | Describtion |
 | ---- | ----------- |

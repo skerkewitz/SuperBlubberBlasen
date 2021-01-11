@@ -19,7 +19,9 @@
  	sep 	#$30    ; X,Y,A are 8 bit numbers
  	lda 	#$8F    ; screen off, full brightness
  	sta 	$2100   ; brightness + screen enable register 
- 	stz 	$2101   ; Sprite register (size + address in VRAM) 
+ 	
+	lda		#%1100000 
+	sta 	$2101   ; Sprite register (size + address in VRAM) 
  	stz 	$2102   ; Sprite registers (address of sprite memory [OAM])
  	stz 	$2103   ;    ""                       ""
  	
@@ -87,7 +89,7 @@
  	stz 	$212A   ; BG1, BG2, BG3, BG4 Window Logic register
  	stz 	$212B   ; OBJ, Color Window Logic Register (or,and,xor,xnor)
  	
-	lda		#1		; Activate only BG 1 
+	lda		#$11	; Activate BG1 and OBJ
 	sta 	TM      ; Main Screen designation (planes, sprites enable) 
  	
 	stz 	$212D   ; Sub Screen designation

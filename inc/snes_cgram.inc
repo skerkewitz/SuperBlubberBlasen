@@ -50,6 +50,6 @@
 ; Requires: VBlank active
 ;----------------------------------------------------------------------------
 .macro _snes_cg_address_i_ args color_index	
-    lda.b   #color_index
+    lda     #color_index
     sta     CGADD               ; set CDRAM address to the given color index
 .endm

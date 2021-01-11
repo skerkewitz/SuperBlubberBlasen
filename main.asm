@@ -41,6 +41,7 @@ Start:
 	sta     $2100
 
 set_palette_red:
+	_useIndex16_
 	_snes_cg_address_i_ 0 
 
           ; gggrrrrr
@@ -61,34 +62,26 @@ _start_blub:
 	lda		#$00
 	pla		
 
-	; Copy palette as palette two
-	stz     $2116       ; set CGRAM addr to zero
-	stz	    $2117
-
+	; 
+	; Load tileset data into vram
 	_useIndex16_
-	ldy		#size_of_tiles
-	ldx		#0
-
-loop_tile:
-	lda.l	tiles, x
-	sta		$2118
-	inx
-	dey	
-	lda.l	tiles, x
-	sta		$2119
-	inx
-	dey	
-
-	bne 	loop_tile
+	stz     $2116       ; set VRAM Adress to zero
+	stz	    $2117
+	_snes_load_tiles_into_vram_a8i16vb_ tiles size_of_tiles
+	_snes_load_tiles_into_vram_a8i16vb_ spr_bubblun_tiles size_of_bubblun_tiles
 
 	;
-	; Load tiles patte into color palette 0
+	; Load color palettes into cgram
 	_useIndex16_
 	_snes_cg_address_0_												; set CGRAM addr to zero
 	_snes_load_palette_into_vram_a8i16vb_ palette size_of_palette	; load via DMA channel 0
+	_snes_cg_address_i_	144										; set CGRAM addr to zero
+	;_snes_cg_address_0_												; set CGRAM addr to zero
 	_snes_load_palette_into_vram_a8i16vb_ spr_bubblun_pal size_of_bubblun_palette	; load via DMA channel 0
 
 
+	;
+	; Load tilemap data into vram
 	_useIndex16_
 	jsr		LoadTilemapDataIntoVram
 
@@ -116,6 +109,47 @@ VBlank:
 	php
 	pha
 
+
+	;
+	; Clear OAM
+	; Setup VRAM target
+	;stz		$2101					; reset obj
+	stz		$2102					; reset target addr in OAM
+	stz		$2103
+
+	;
+	; Fill first to rows with empty tile
+	ldy		#128					; first to rows of tiles are empty
+
+_clear_sprites_loop:
+	stz		$2104					; clear one sprite
+	stz		$2104
+	stz		$2104
+	stz		$2104
+	dey	
+	bne 	_clear_sprites_loop
+	lda		#2						; make sprite 0 alway 16x16
+	stz		$2104
+
+	;
+	; Setup Bubblun
+	; Setup VRAM target
+	stz		$2102					; reset target addr in OAM
+	stz		$2103
+
+	lda		#100					; sprite x
+	sta		$2104					;
+	lda 	#110					; sprite y
+	sta		$2104
+	lda		#18						; tile number
+	sta		$2104
+	
+	lda		#%110010						; palette is wrong
+	sta		$2104
+
+
+
+/*
 	inc     color_count
 
 	stz     $2121       ; set CGRAM addr to zero
@@ -127,7 +161,7 @@ VBlank:
      
   ;         0bbbbbgg
 ;	lda     #%00000000  ; Load the high byte of the green color.
-	stz     $2122
+	stz     $2122 */
 
 	pla
 	plp

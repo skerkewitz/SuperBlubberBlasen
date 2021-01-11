@@ -71,8 +71,16 @@
 								; For HDMA it should be usually some PPU register (eg. for changing scroll offsets midframe).
 
 
+.define BBAD_DT_OAM		$04		; BBus DMA target Object attribute memory
+.define BBAD_DT_VRAM	$18		; BBus DMA target VRAM
+.define BBAD_DT_CGRAM	$22		; BBus DMA target CGRAM
+.define BBAD_DT_WRAM	$80		; BBus DMA target WRAM
+
+
+
+
 ;============================================================================
-;LoadPalette - Macro that loads palette information into CGRAM
+; LoadPalette - Macro that loads palette information into CGRAM
 ;----------------------------------------------------------------------------
 ; In:	source_addr				24 bit address of source data,
 ;		size_in_bytes			amount of bytes(!) to copy
@@ -88,5 +96,25 @@
     ldy #size_in_bytes			; amount of bytes, 2 bytes for every color
     
 	; Call the actual channel 0 subroutine
-	jsr SnesDmaLoadPaletteIntoVram_a8i16vb
+	jsr SnesDma0LoadPaletteIntoVram_a8i16vb
+.ENDM
+
+;============================================================================
+; LoadPalette - Macro that loads palette information into CGRAM
+;----------------------------------------------------------------------------
+; In:	source_addr				24 bit address of source data,
+;		size_in_bytes			amount of bytes(!) to copy
+;----------------------------------------------------------------------------
+; Out: None
+;----------------------------------------------------------------------------
+; Modifies: A,X
+; Requires: mem/A = 8 bit, X/Y = 16 bit
+;----------------------------------------------------------------------------
+.MACRO _snes_load_tiles_into_vram_a8i16vb_ args source_addr size_in_bytes
+    lda #:source_addr        	; Using : before the parameter gets its bank.
+    ldx #source_addr         	; Not using : gets the offset address (16bit)
+    ldy #size_in_bytes			; amount of bytes, 2 bytes for every color
+    
+	; Call the actual channel 0 subroutine
+	jsr SnesDma1LoadTilesIntoVram_a8i16vb
 .ENDM
