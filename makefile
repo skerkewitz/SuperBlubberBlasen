@@ -1,11 +1,12 @@
 #
 # Vars
 
-ASM = wla-65816
+ASM = ../wla-dx/build/binaries/wla-65816
 ASM_INC = -I ./inc
 
-LINKER = wlalink
-LINKER-FLAGS = -s -S -A -v
+LINKER = ../wla-dx/build/binaries/wlalink
+
+LINKER-FLAGS = -S -A -v
 
 OUT-NAME = sblubber
 ROM-NAME = $(OUT-NAME).smc
@@ -16,21 +17,22 @@ SF-NODISCARD = --no-discard --no-flip
 # Rules
 
 build: data lib obj
-	wlalink $(LINKER-FLAGS) -i sblubber.link $(ROM-NAME)
+	$(LINKER) $(LINKER-FLAGS) -i sblubber.link $(ROM-NAME)
 
 obj:
 	mkdir ./obj
-	$(ASM) -v $(ASM_INC) -o ./obj/main.obj main.asm
+	$(ASM) -v $(ASM_INC) -i -o obj/main.obj main.asm
 
 lib:
 	mkdir ./lib
-	$(ASM) -v $(ASM_INC) -l ./lib/snes_dma.lib snes_dma.asm
+	$(ASM) -v $(ASM_INC) -i -l lib/snes_dma.lib snes_dma.asm
 
 clean:
 	rm -f *.smc
 	rm -rf ./obj
 	rm -rf ./lib
 	rm -rf ./data
+	find . -name '*.lst' -delete
 
 data: round01 bubblun
 

@@ -8,9 +8,10 @@
 zTrash
 
 # Binary data files
-data/
+#data/
 
 # Object files
+*.lst
 *.o
 *.ko
 *.obj

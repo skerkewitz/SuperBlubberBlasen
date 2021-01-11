@@ -8,7 +8,7 @@
 
 ; Declare global zero pages var
 .RAMSECTION "ZeroPageVars" BANK 0 SLOT 0
-	color_count:	db
+	color_count:	db			; blah
 
 	;
 	; Player sprite position in screen space
@@ -124,7 +124,7 @@ MainGameLoop:
 ;
 ;	lda		JOY1L
 	lda		JOY1H					; load full 16bit joypad 1 state into X
-	
+.sym tralla	
 	tax								; Check button R
 	and 	#1						
 	beq		@joy1_skip_dpad_r
