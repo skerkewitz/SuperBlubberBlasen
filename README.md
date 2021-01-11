@@ -7,3 +7,7 @@ You need:
 * The SNES Emulator Mesen-S to run. So far I don't test other emulator.
 
 Use ```make clean; make``` to build the rom.
+
+# SNES Documentation
+
+* [Full SNES documentation](https://problemkaputt.de/fullsnes.htm) with all the registers
