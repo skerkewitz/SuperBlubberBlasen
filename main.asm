@@ -55,7 +55,7 @@ Start:
 	lda     #%10000000  ; Force VBlank by turning off the screen.
 	sta     $2100
 
-set_palette_red:
+@set_palette_red:
 	_useIndex16_
 	_snes_cg_address_i_ 0 
 
@@ -81,7 +81,7 @@ _start_blub:
 
 	;
 	; Init player sprite vars
-_init_player_sprite_vars:
+@init_player_sprite_vars:
 	stz		player_x
 	lda		#100
 	sta		player_y	
@@ -119,7 +119,7 @@ _init_player_sprite_vars:
 ;----------------------------------------------------------------------------------------------------------------------
 ; The top main game loop, does not much at the moment
 MainGameLoop:
-_mainGameLoop_begin:
+@begin:
 
 ;
 ;	lda		JOY1L
@@ -127,42 +127,42 @@ _mainGameLoop_begin:
 	
 	tax								; Check button R
 	and 	#1						
-	beq		_joy1_skip_dpad_r
+	beq		@joy1_skip_dpad_r
 
 	inc		player_x
 
-_joy1_skip_dpad_r:
+@joy1_skip_dpad_r:
 	txa
 	lsr		
 	tax
 	and		#1
-	beq		_joy1_skip_dpad_l
+	beq		@joy1_skip_dpad_l
 
 	dec		player_x
 
 
-_joy1_skip_dpad_l:
+@joy1_skip_dpad_l:
 	txa
 	lsr		
 	tax
 	and		#1
-	beq		_joy1_skip_dpad_d
+	beq		@joy1_skip_dpad_d
 
 	inc		player_y
 
-_joy1_skip_dpad_d:
+@joy1_skip_dpad_d:
 	txa
 	lsr		
 	tax
 	and		#1
-	beq		_joy1_skip_dpad_u
+	beq		@joy1_skip_dpad_u
 
 	dec		player_y
 
-_joy1_skip_dpad_u:
+@joy1_skip_dpad_u:
 
 	wai								; Wait for vblank
-	jmp		_mainGameLoop_begin
+	jmp		@begin
 
 
 
@@ -184,13 +184,13 @@ VBlank:
 	; Fill first to rows with empty tile
 	ldy		#128					; first to rows of tiles are empty
 
-_clear_sprites_loop:
+@clear_sprites_loop:
 	stz		$2104					; clear one sprite
 	stz		$2104
 	stz		$2104
 	stz		$2104
 	dey	
-	bne 	_clear_sprites_loop
+	bne 	@clear_sprites_loop
 	lda		#2						; make sprite 0 alway 16x16
 	stz		$2104
 
@@ -259,24 +259,24 @@ LoadTilemapDataIntoVram:
 	ldy		#64						; first to rows of tiles are empty
 	lda		#16						; index of the empty file
 
-_load_tilemap_date_into_vram__header_loop:
+@header_loop:
 	sta		VMDATAL
 	stz		VMDATAH
 	dey	
-	bne 	_load_tilemap_date_into_vram__header_loop
+	bne 	@header_loop
 
 	;
 	; fill remaining rows with actual map data
 	ldy		#size_of_tilemap		; setup counter
 	ldx		#0
 
-_load_tilemap_date_into_vram__mapdata_loop:
+@mapdata_loop:
 	lda.l	tilemap, x				; load tilemap data
 	sta		VMDATAL
 	stz		VMDATAH
 	inx
 	dey	
-	bne 	_load_tilemap_date_into_vram__mapdata_loop
+	bne 	@mapdata_loop
 
 	rts
 
