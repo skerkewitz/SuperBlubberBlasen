@@ -110,4 +110,9 @@
 
  	cli 	 	; Enable interrupts
  	rts
+
+
+EmptyHandler:
+       rti
+
  .ends

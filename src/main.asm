@@ -13,8 +13,8 @@
 
 	;
 	; Player sprite position in screen space
-	player_x:		db
-	player_y:		db
+	;player_x:		db
+	;player_y:		db
 .ENDS
 
 .bank 0 slot 1
@@ -41,6 +41,8 @@
 .endm
 
 
+.define player_x_start        	112      ; The height of the level in 8 pixel tiles
+.define player_y_start			64
 
 Start:
 	; Initialize the SNES.
@@ -55,10 +57,7 @@ Start:
 
 	;
 	; Init player sprite vars
-@init_player_sprite_vars:
-	stz		player_x
-	lda		#100
-	sta		player_y	
+	jsr		GamePlayer_BeforeStartLevel
 
 	; 
 	; Load tileset data into vram
@@ -93,53 +92,9 @@ Start:
 MainGameLoop:
 @begin:
 	_useIndex16_
-;
-;	lda		JOY1L
-	lda		JOY1H					; load full 16bit joypad 1 state into X
-.sym tralla	
-	tax								; Check button R
-	and 	#1						
-	beq		@joy1_skip_dpad_r
 
-	inc		player_x
-
-@joy1_skip_dpad_r:
-	txa
-	lsr		
-	tax
-	and		#1
-	beq		@joy1_skip_dpad_l
-
-	dec		player_x
-
-
-@joy1_skip_dpad_l:
-	txa
-	lsr		
-	tax
-	and		#1
-	beq		@joy1_skip_dpad_d
-
-	inc		player_y
-
-@joy1_skip_dpad_d:
-	txa
-	lsr		
-	tax
-	and		#1
-	beq		@joy1_skip_dpad_u
-
-	dec		player_y
-
-@joy1_skip_dpad_u:
-
-
-	lda		player_x
-	tax
-	lda		player_y
-	tay
-	game_map_content_at_screen_pos
-	lda.w	tilemap, x	
+	; Handle player inputs
+	jsr		GamePlayer_HandleInput
 
 	wai								; Wait for vblank
 	jmp		@begin
@@ -163,11 +118,14 @@ VBlank:
 	; Fill first to rows with empty tile
 	ldy		#128					; first to rows of tiles are empty
 
+.define offscreen   (GAME_LEVEL_HEIGHT +3) * 8
 @clear_sprites_loop:
 	stz		$2104					; clear one sprite
+	lda		#offscreen
+	sta		$2104
 	stz		$2104
-	stz		$2104
-	stz		$2104
+	lda		#%00110000
+	sta		$2104
 	dey	
 	bne 	@clear_sprites_loop
 	lda		#2						; make sprite 0 alway 16x16

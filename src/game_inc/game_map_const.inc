@@ -3,9 +3,9 @@
 .define GAME_LEVEL_WIDTH          32      ; The width of the level in 8 pixel tiles
 .define GAME_LEVEL_HEIGHT         26      ; The height of the level in 8 pixel tiles
 
-
 ;
 ; Load the tile for the screen pos in register X, Y into A
+; We could use a bit array here instead byte array.
 .MACRO game_map_content_at_screen_pos
     
     txa

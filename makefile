@@ -30,11 +30,16 @@ build: data lib obj
 obj:
 	mkdir -p $(OBJ-OUT-DIR)
 	$(ASM) -v $(ASM-INC) -i -o $(OBJ-OUT-DIR)/main.obj $(SRC-DIR)/main.asm
+	$(ASM) -v $(ASM-INC) -i -o $(OBJ-OUT-DIR)/game_player.obj $(SRC-DIR)/game_player.asm
 
 lib:
 	mkdir -p $(LIB-OUT-DIR)
+
+	# SNES code
 	$(ASM) -v $(ASM-INC) -i -l $(LIB-OUT-DIR)/snes_init.lib $(SRC-DIR)/snes_init.asm
 	$(ASM) -v $(ASM-INC) -i -l $(LIB-OUT-DIR)/snes_dma.lib $(SRC-DIR)/snes_dma.asm
+	
+
 
 clean:
 	rm -rf $(OUT-DIR)

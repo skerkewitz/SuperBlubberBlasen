@@ -1,5 +1,6 @@
 [objects]
 out/obj/main.obj
+out/obj/game_player.obj
 
 [libraries]
 bank 0 slot 1 out/lib/snes_dma.lib
