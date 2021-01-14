@@ -78,11 +78,13 @@ GamePlayer_HandleInput:
 
 	lda		player_x
 	clc
-	adc		#16
+	adc		#8
 	tax
 	lda		player_y
-	clc
-;	adc     #16
+
+;	sec                                     ; Y position is 16 screen pixel to low, but the map is
+                                            ; also move by 16 pixel down - so the balance out
+;	sbc     #16
 	tay
 	game_map_content_at_screen_pos
 	lda.w	tilemap, x	

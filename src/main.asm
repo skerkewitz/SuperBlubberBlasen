@@ -19,26 +19,6 @@
 
 .bank 0 slot 1
 .section "MainCode" FORCE 
- 
-.macro _useIndex16_					; Turn on 16bit mode on for X and Y, also let wla know using .index16
-	.index 	16
-	rep		#$10					; turn X flag in SR off
-.endm
-
-.macro _useIndex8_					; Turn on 8bit mode on for X and Y, also let wla know using .index8
-	.index	8
-	sep		#$10					; turn X flag in SR on
-.endm
-
-.macro _useAccu16_					; Turn on 16bit mode on for A, also let wla know using .accu16
-	.index 	16
-	rep		#$20					; turn M flag in SR off
-.endm
-
-.macro _useAccu8_					; Turn on 8bit mode on for A, also let wla know using .accu8
-	.index	8
-	sep		#$20					; turn M flag in SR on
-.endm
 
 
 .define player_x_start        	112      ; The height of the level in 8 pixel tiles

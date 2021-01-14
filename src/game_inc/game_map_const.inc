@@ -8,16 +8,18 @@
 ; We could use a bit array here instead byte array.
 .MACRO game_map_content_at_screen_pos
     
+    _useAccu16_
     txa
+    and     #$FF    ; clear higher 8 bit garbage
     clc
     lsr             ; div 2
     lsr             ; div 4
     lsr             ; div 8
     
-    pha             ; Push two times as it A is 8bit but plx at the end is 16 bit
-    pha
+    pha             ; Push one time as it A is 16bit
     
     tya             ; Transfer Y screen position into A
+    and     #$FF    ; clear higher 8 bit garbage
     clc
     lsr             ; div 2
     lsr             ; div 4
@@ -33,6 +35,7 @@
     clc
     adc     1,s
     tax
+    _useAccu8_
     ;lda     tilemap,x
     ply  
  .ENDM
