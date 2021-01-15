@@ -19,6 +19,7 @@
 	player_screen_y:		db
     player_on_ground:       db      ; zero if not not on ground
     player_injump_count:    db      ; if the player is in an up jump this is the reamining up count
+	player_flip_mask:		db		; set bit 6 to flip x
 .ENDS
 
 .bank 0 slot 1
@@ -54,6 +55,7 @@ GamePlayer_HandleInput:
 	beq		@joy1_skip_dpad_r
 
 	inc		player_screen_x
+	stz		player_flip_mask
 
 @joy1_skip_dpad_r:
 	txa
@@ -63,6 +65,8 @@ GamePlayer_HandleInput:
 	beq		@joy1_skip_dpad_l
 
 	dec		player_screen_x
+	lda		#%01000000
+	sta		player_flip_mask
 
 
 @joy1_skip_dpad_l:

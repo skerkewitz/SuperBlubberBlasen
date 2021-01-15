@@ -124,10 +124,11 @@ VBlank:
 	lda		player_screen_y
 	sta		$2104
 
-	lda		#18						; tile number
+	lda		#18								; tile number
 	sta		$2104
 	
-	lda		#%110010						; palette is wrong
+	lda		#%00110010						; palette is wrong
+	ora		player_flip_mask				; flip sprite if needed
 	sta		$2104
 
 
