@@ -126,6 +126,7 @@ GamePlayer_HandleInput:
 
 @off_floor:
 	inc		player_screen_y
+	jmp		@end
 
 @on_floor:
     lda     #1

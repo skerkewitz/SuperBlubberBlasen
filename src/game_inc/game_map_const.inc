@@ -25,11 +25,15 @@
     lsr             ; div 4
     lsr             ; div 8
 
-    ;clc
+    clc
     rol             ; time 2
+    clc
     rol             ; time 4
+    clc
     rol             ; time 8
+    clc
     rol             ; time 16
+    clc
     rol             ; time 32
     
     clc
