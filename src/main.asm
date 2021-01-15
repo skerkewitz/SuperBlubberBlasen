@@ -118,10 +118,10 @@ VBlank:
 	stz		$2103
 
 	;lda		#100					; sprite x
-	lda		player_x
+	lda		player_screen_x
 	sta		$2104					;
 	;lda 	#110					; sprite y
-	lda		player_y
+	lda		player_screen_y
 	sta		$2104
 
 	lda		#18						; tile number

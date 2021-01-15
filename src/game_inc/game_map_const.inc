@@ -21,20 +21,21 @@
     tya             ; Transfer Y screen position into A
     and     #$FF    ; clear higher 8 bit garbage
     clc
-    ;lsr             ; div 2
-    ;lsr             ; div 4
-    ;lsr             ; div 8
+    lsr             ; div 2
+    lsr             ; div 4
+    lsr             ; div 8
 
     ;clc
-    ;rol             ; time 2
-    ;rol             ; time 4
-    ;rol             ; time 8
+    rol             ; time 2
+    rol             ; time 4
+    rol             ; time 8
     rol             ; time 16
     rol             ; time 32
     
     clc
     adc     1,s
     tax
+    lda     #0
     _useAccu8_
     ;lda     tilemap,x
     ply  
