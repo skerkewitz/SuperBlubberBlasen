@@ -24,14 +24,14 @@
 
 ; === DMA channel channel register  ===
 
-.define DMAP0       $4300h 		; DMA/HDMA channel 0 parameters (R/W)
-.define DMAP1       $4310h 		; DMA/HDMA channel 1 parameters (R/W)
-.define DMAP2       $4320h 		; DMA/HDMA channel 2 parameters (R/W)
-.define DMAP3       $4330h 		; DMA/HDMA channel 3 parameters (R/W)
-.define DMAP4       $4340h 		; DMA/HDMA channel 4 parameters (R/W)
-.define DMAP5       $4350h 		; DMA/HDMA channel 5 parameters (R/W)
-.define DMAP6       $4360h 		; DMA/HDMA channel 6 parameters (R/W)
-.define DMAP7       $4370h 		; DMA/HDMA channel 7 parameters (R/W)
+.define DMAP0       $4300 		; DMA/HDMA channel 0 parameters (R/W)
+.define DMAP1       $4310 		; DMA/HDMA channel 1 parameters (R/W)
+.define DMAP2       $4320 		; DMA/HDMA channel 2 parameters (R/W)
+.define DMAP3       $4330 		; DMA/HDMA channel 3 parameters (R/W)
+.define DMAP4       $4340 		; DMA/HDMA channel 4 parameters (R/W)
+.define DMAP5       $4350 		; DMA/HDMA channel 5 parameters (R/W)
+.define DMAP6       $4360 		; DMA/HDMA channel 6 parameters (R/W)
+.define DMAP7       $4370 		; DMA/HDMA channel 7 parameters (R/W)
                                 ;
                                 ;  7     Transfer Direction		(0=A:CPU to B:I/O, 1=B:I/O to A:CPU)
 								;  6     Addressing Mode    	(0=Direct Table, 1=Indirect Table)		(HDMA only)
@@ -55,14 +55,14 @@
 
 
 
-.define BBAD0     	$4301h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD1     	$4311h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD2     	$4321h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD3     	$4331h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD4     	$4341h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD5     	$4351h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD6     	$4361h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
-.define BBAD7     	$4371h 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD0     	$4301 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD1     	$4311 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD2     	$4321 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD3     	$4331 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD4     	$4341 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD5     	$4351 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD6     	$4361 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
+.define BBAD7     	$4371 		; DMA/HDMA B-Bus Address channel 0 (I/O Bus aka PPU-Bus aka B-Bus) (R/W)
 								;
 								; For both DMA and HDMA:
 								;   7-0   B-Bus Address (selects an I/O Port which is mapped to 2100h-21FFh)
@@ -118,3 +118,4 @@
 	; Call the actual channel 0 subroutine
 	jsr SnesDma1LoadTilesIntoVram_a8i16vb
 .ENDM
+
