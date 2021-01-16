@@ -94,6 +94,13 @@
                                 ; reading $4016/7 or writing $4016 during this time will also screw things up.
 
 
+.define kDPAD_RIGHT     $01     ; Joypad DPAD right bitmask
+.define kDPAD_LEFT      $02     ; Joypad DPAD left bitmask
+.define kDPAD_DOWN      $04     ; Joypad DPAD DOWN bitmask
+.define kDPAD_UP        $08     ; Joypad DPAD left bitmask
+
+
+
 ;
 ; Enable automatic reading for both joypads
 .MACRO _sns_controller_io__enable_automatic_joypad_read

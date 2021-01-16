@@ -7,10 +7,12 @@
 
 .include "src/game_inc/game_map_const.inc"
 
-.define player_x_start        	1; 112      ; The height of the level in 8 pixel tiles
-.define player_y_start			1; 64
+.define kPLAYER_X_START        		1; 112      ; The height of the level in 8 pixel tiles
+.define kPLAYER_Y_START				1; 64
 
-.define k_player_jump_count     40       ; The jump height
+.define kPLAYER_JUMP_COUNT			40       	; The jump height
+
+.define kSPRITE_FLIP_X_BITMASK		%01000000	; Sprite is fliped on X bit mask	
 
 ; Declare global zero pages var
 .RAMSECTION "ZeroPlage_PlayerVars" BANK 0 SLOT 0
@@ -30,9 +32,9 @@
 GamePlayer_BeforeStartLevel:
 	;
 	; Init player sprite vars
-	lda		#player_x_start
+	lda		#kPLAYER_X_START
 	sta		player_screen_x
-	lda		#player_y_start
+	lda		#kPLAYER_Y_START
 	sta		player_screen_y	
     lda     #1
     stz     player_on_ground
@@ -43,37 +45,51 @@ GamePlayer_BeforeStartLevel:
 ; The top main game loop, does not much at the moment
 GamePlayer_HandleInput:
 @begin:
+	
+	; Clear all 16 bits of A
     lda     #0
     xba
     lda     #0
 	_useIndex16_
 ;
 ;	lda		JOY1L
-	lda		JOY1H					; load full 16bit joypad 1 state into X
-	tax								; Check button R
-	and 	#1						
+	lda		JOY1H							; load full 16bit joypad 1 state into X
+	tax										; Store it to X so we can restore it quickly
+	bit		#kDPAD_RIGHT					; Check button R
 	beq		@joy1_skip_dpad_r
 
 	inc		player_screen_x
 	stz		player_flip_mask
 
+@clamp_sprite_x_max
+	lda		#kMAX_X_SCREEN_POS				; make sure we do not run out of screen on the left
+	cmp		player_screen_x
+	bcs		@skip_set_max_x					; clear if A >= M
+	sta		player_screen_x					; adjust x position	to 16
+
+@skip_set_max_x:
+	txa										; restore DPAD data in A
+
 @joy1_skip_dpad_r:
-	txa
-	lsr		
-	tax
-	and		#1
+	bit		#kDPAD_LEFT						; is left dpad pressed
 	beq		@joy1_skip_dpad_l
 
-	dec		player_screen_x
-	lda		#%01000000
+@move_sprite_left
+	dec		player_screen_x					; yes, move sprite left
+	
+@clamp_sprite_x_min
+	lda		#kMIN_X_SCREEN_POS				; make sure we do not run out of screen on the left
+	cmp		player_screen_x
+	bcc		@skip_set_min_x					; clear if A >= M
+	sta		player_screen_x					; adjust x position	to 16
+
+@skip_set_min_x:
+	lda		#kSPRITE_FLIP_X_BITMASK
 	sta		player_flip_mask
 
-
 @joy1_skip_dpad_l:
-	txa
-	lsr		
-	tax
-	and		#1
+	txa										; Restore DPAD value in A
+	bit		#kDPAD_DOWN
 	beq		@joy1_skip_dpad_d
 
 	inc		player_screen_y
@@ -86,13 +102,11 @@ GamePlayer_HandleInput:
 
     ; Handle dpad up
 	txa
-	lsr		
-	tax
-	and		#1
+	bit		#kDPAD_UP
 	beq		@joy1_skip_dpad_u
 
     stz     player_on_ground
-    lda     #k_player_jump_count
+    lda     #kPLAYER_JUMP_COUNT
     sta     player_injump_count
 	dec		player_screen_y
 

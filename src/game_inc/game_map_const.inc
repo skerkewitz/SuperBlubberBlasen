@@ -1,7 +1,10 @@
 
 
-.define GAME_LEVEL_WIDTH          32      ; The width of the level in 8 pixel tiles
-.define GAME_LEVEL_HEIGHT         26      ; The height of the level in 8 pixel tiles
+.define GAME_LEVEL_WIDTH        32      ; The width of the level in 8 pixel tiles
+.define GAME_LEVEL_HEIGHT       26      ; The height of the level in 8 pixel tiles
+
+.define kMIN_X_SCREEN_POS       16                          ; left of sprite screen position can not be smaller
+.define kMAX_X_SCREEN_POS       (GAME_LEVEL_WIDTH-4) * 8    ; left of sprite screen position can not be bigger
 
 ;
 ; Load the tile for the screen pos in register X, Y into A
