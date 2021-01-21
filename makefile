@@ -50,7 +50,7 @@ clean:
 	rm -rf ./data
 	find . -name '*.lst' -delete
 
-data: round01 bubblun
+data: round01 bubblun zanchan
 
 round01:
 	mkdir -p data
@@ -59,3 +59,7 @@ round01:
 bubblun:
 	mkdir -p data
 	superfamiconv --verbose --no-remap --color-zero FF00FF --sprite-mode $(SF-TILE16x16) $(SF-NODISCARD) --bpp 4  -i ./res/sprite/bubblun.png -p ./data/bubblun_palette.dat --out-tiles ./data/bubblun_tile.dat 
+
+zanchan:
+	mkdir -p data
+	superfamiconv --verbose --no-remap --color-zero FF00FF --sprite-mode $(SF-TILE16x16) $(SF-NODISCARD) --bpp 4  -T 3 -i ./res/sprite/sprites.png -p ./data/sprites_palette.dat --out-tiles ./data/sprites_tile.dat
