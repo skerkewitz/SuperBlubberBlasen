@@ -9,7 +9,8 @@
 
 ; Declare global zero pages var
 .RAMSECTION "ZeroPageVars" BANK 0 SLOT 0
-	color_count:	db			; blah
+	color_count:		db			; blah
+	frame_counter:		db			; frame counter for animation
 
 	;
 	; Player sprite position in screen space
@@ -76,6 +77,9 @@ MainGameLoop:
 	; Handle player inputs
 	jsr		GamePlayer_HandleInput
 
+	; Move the enemy
+	jsr		GameEnemy_Move
+
 	wai								; Wait for vblank
 	jmp		@begin
 
@@ -86,6 +90,8 @@ MainGameLoop:
 VBlank:
 	php
 	pha
+
+	inc		frame_counter
 
 	;
 	; Clear OAM
@@ -117,18 +123,50 @@ VBlank:
 	stz		$2102					; reset target addr in OAM
 	stz		$2103
 
+	;
+	; Update player
 	;lda		#100					; sprite x
-	lda		player_screen_x
+	lda		player.screen_x
 	sta		$2104					;
 	;lda 	#110					; sprite y
-	lda		player_screen_y
+	lda		player.screen_y
 	sta		$2104
 
 	lda		#18								; tile number
 	sta		$2104
 	
 	lda		#%00110010						; palette is wrong
-	ora		player_flip_mask				; flip sprite if needed
+	ora		player.flip_mask				; flip sprite if needed
+	sta		$2104
+
+	;
+	; Update enemy
+	;lda		#100					; sprite x
+	lda		enemy.screen_x
+	sta		$2104					;
+	;lda 	#110					; sprite y
+	lda		enemy.screen_y
+	sta		$2104
+
+	
+	;
+	; Animate the frame
+	lda		frame_counter
+	bit		#%1000
+	bne		@odd
+
+	lda		#20								; tile number
+	jmp		@store
+
+@odd:
+	lda		#22
+
+
+@store:
+	sta		$2104
+	
+	lda		#%00110010						; palette is wrong
+	ora		enemy.flip_mask				; flip sprite if needed
 	sta		$2104
 
 
